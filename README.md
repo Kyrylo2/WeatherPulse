@@ -1,86 +1,56 @@
-# WeatherPulse
+# WeatherPulse 🌞
 
-A real-time global weather dashboard built with React and Flask.
+A weather application that fetches data for the following cities:
+
+* Kyiv 🇺🇦
+* Lviv 🇺🇦
+* Odesa 🇺🇦
+* Dnipro 🇺🇦
+* Kharkiv 🇺🇦
 
 ## Features
 
-- Real-time weather updates for 5 major global cities:
-  - London
-  - New York
-  - Tokyo
-  - Paris
-  - Dubai
-- Automatic updates every 30 seconds
-- Display of temperature, humidity, wind speed, and weather conditions
-- Clean, modern UI using Material-UI components
-- Rate limit compliant with OpenWeatherMap free tier (60 calls/minute)
+* Fetches weather data from the OpenWeatherMap API 🌡️
+* Updates weather data every 10 seconds ⏰
+* Displays weather data in a user-friendly format 📊
 
-## Setup
+## Technologies Used
 
-### Backend Setup
+* Python 🐍
+* Flask 🌟
+* OpenWeatherMap API 🌡️
 
-1. Navigate to the server directory:
-```bash
-cd project/server
-```
+## Prerequisites
 
-2. Create configuration file:
-```bash
-cp config.template.py config.py
-```
+* Python 3.8 or higher 🐍
+* pip package manager 📦
+* Node.js and npm for the React app 📈
 
-3. Edit `config.py` and add your OpenWeatherMap API key:
-```python
-API_KEY = "your_api_key_here"
-```
+## Installation
 
-4. Install Python dependencies:
-```bash
-pip3 install -r requirements.txt
-```
+1. Clone the repository 📁
+2. Install the required dependencies using `pip install -r requirements.txt` 📦
+3. Install the required dependencies for the React app using `npm install` 📈
+4. Create a new file called `config.py` and add your OpenWeatherMap API key 📝
 
-5. Start the Flask server:
-```bash
-python3 server.py
-```
+## Running the Project
 
-The server will run on port 8000.
+1. Run the Flask server using `python server.py` 🌟
+2. Run the React app using `npm start` 📈
 
-### Frontend Setup
+## API Endpoints
 
-1. Navigate to the React app directory:
-```bash
-cd project/react-app
-```
+* `/data`: Returns the weather data for all cities 🌡️
 
-2. Install Node.js dependencies:
-```bash
-npm install
-```
+## Notes
 
-3. Start the development server:
-```bash
-npm start
-```
+* The application uses a queue to store the weather data 📝
+* The weather data is updated every 10 seconds ⏰
 
-The app will be available at http://localhost:3000
+### Contributing
 
-## Security Note
+If you would like to contribute to this project, please fork the repository and submit a pull request 🤝
 
-The `config.py` file containing your API key is excluded from version control for security. Never commit your API keys to the repository. Make sure to keep your API keys secure and private.
+### License
 
-## API Rate Limiting
-
-This application is designed to work within the OpenWeatherMap API free tier limits:
-- Maximum 60 calls per minute
-- Current implementation:
-  - 5 cities updated every 30 seconds
-  - 1-second delay between city updates
-  - Total: ~10 API calls per minute
-
-## Development
-
-- Backend: Flask with Python 3
-- Frontend: React with Material-UI
-- API: OpenWeatherMap
-- Real-time updates using threading and queue system
+This project is licensed under the MIT License 📜
