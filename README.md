@@ -1,56 +1,108 @@
-# WeatherPulse 🌞
+# 🌞 WeatherPulse 🌞
 
-A weather application that fetches data for the following cities:
+A real-time weather dashboard for Ukrainian cities built with React and Flask 🚀
 
-* Kyiv 🇺🇦
-* Lviv 🇺🇦
-* Odesa 🇺🇦
-* Dnipro 🇺🇦
-* Kharkiv 🇺🇦
+## 🌍 Live Demo
 
-## Features
+Visit the live application at: https://kyrylo2.github.io/WeatherPulse
 
-* Fetches weather data from the OpenWeatherMap API 🌡️
-* Updates weather data every 10 seconds ⏰
-* Displays weather data in a user-friendly format 📊
+## 🌈 Features 🌈
 
-## Technologies Used
+- Real-time weather updates for major Ukrainian cities:
+  - Kyiv 🏛️
+  - Lviv 🎭
+  - Odesa 🌊
+  - Dnipro 🌉
+  - Kharkiv 🏰
+- Automatic updates every 10 seconds ⏰
+- Display of temperature, humidity, wind speed, and weather conditions 🌡️
+- Clean, modern UI using Material-UI components 💻
 
-* Python 🐍
-* Flask 🌟
-* OpenWeatherMap API 🌡️
+## 📚 Setup 📚
 
-## Prerequisites
+### 📁 Backend Setup 📁
 
-* Python 3.8 or higher 🐍
-* pip package manager 📦
-* Node.js and npm for the React app 📈
+1. Navigate to the server directory:
+```bash
+cd project/server
+```
 
-## Installation
+2. Create configuration file:
+```bash
+cp config.template.py config.py
+```
 
-1. Clone the repository 📁
-2. Install the required dependencies using `pip install -r requirements.txt` 📦
-3. Install the required dependencies for the React app using `npm install` 📈
-4. Create a new file called `config.py` and add your OpenWeatherMap API key 📝
+3. Edit `config.py` and add your OpenWeatherMap API key:
+```python
+API_KEY = "your_api_key_here"
+```
 
-## Running the Project
+4. Install Python dependencies:
+```bash
+pip3 install -r requirements.txt
+```
 
-1. Run the Flask server using `python server.py` 🌟
-2. Run the React app using `npm start` 📈
+5. Start the Flask server:
+```bash
+python3 server.py
+```
 
-## API Endpoints
+The server will run on port 8000 📈
 
-* `/data`: Returns the weather data for all cities 🌡️
+### 📁 Frontend Setup 📁
 
-## Notes
+1. Navigate to the React app directory:
+```bash
+cd project/react-app
+```
 
-* The application uses a queue to store the weather data 📝
-* The weather data is updated every 10 seconds ⏰
+2. Install Node.js dependencies:
+```bash
+npm install
+```
 
-### Contributing
+3. Start the development server:
+```bash
+npm start
+```
 
-If you would like to contribute to this project, please fork the repository and submit a pull request 🤝
+The app will be available at http://localhost:3000 📊
 
-### License
+## 🚀 Deployment 🚀
 
-This project is licensed under the MIT License 📜
+The frontend is deployed using GitHub Pages. To deploy updates:
+
+1. Make your changes
+2. Run the deploy command:
+```bash
+npm run deploy
+```
+
+The changes will be live at https://kyrylo2.github.io/WeatherPulse
+
+## 🔒 Security Note 🔒
+
+The `config.py` file containing your API key is excluded from version control for security 🔒. Never commit your API keys to the repository 🚫. Make sure to keep your API keys secure and private 🔑.
+
+## 📊 API Rate Limiting 📊
+
+This application is designed to work within the OpenWeatherMap API free tier limits:
+- Maximum 60 calls per minute ⏰
+- Current implementation:
+  - 5 cities updated every 10 seconds ⏰
+  - Total: ~30 API calls per minute 📊
+
+## 💻 Development 💻
+
+- Backend: Flask with Python 3 🐍
+- Frontend: React with Material-UI 📈
+- API: OpenWeatherMap 🌡️
+- Real-time updates using threading and queue system 🕒
+
+## 🤝 Contributing 🤝
+
+If you would like to contribute to this project, please fork the repository and submit a pull request.
+
+## 📜 License 📜
+
+This project is licensed under the MIT License.
