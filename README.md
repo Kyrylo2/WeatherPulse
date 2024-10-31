@@ -27,22 +27,17 @@ Visit the live application at: https://kyrylo2.github.io/WeatherPulse
 cd project/server
 ```
 
-2. Create configuration file:
-```bash
-cp config.template.py config.py
-```
-
-3. Edit `config.py` and add your OpenWeatherMap API key:
-```python
-API_KEY = "your_api_key_here"
-```
-
-4. Install Python dependencies:
+2. Install Python dependencies:
 ```bash
 pip3 install -r requirements.txt
 ```
 
-5. Start the Flask server:
+3. Set environment variable:
+```bash
+export OPENWEATHERMAP_API_KEY="your_api_key_here"
+```
+
+4. Start the Flask server:
 ```bash
 python3 server.py
 ```
@@ -61,7 +56,11 @@ cd project/react-app
 npm install
 ```
 
-3. Start the development server:
+3. Environment Configuration:
+   - For development: `.env.development` configures the API URL to `http://localhost:8000`
+   - For production: `.env.production` configures the API URL to your deployed backend URL
+
+4. Start the development server:
 ```bash
 npm start
 ```
@@ -70,19 +69,43 @@ The app will be available at http://localhost:3000 📊
 
 ## 🚀 Deployment 🚀
 
-The frontend is deployed using GitHub Pages. To deploy updates:
+### Backend Deployment (Heroku)
 
-1. Make your changes
-2. Run the deploy command:
+1. Create a new Heroku app:
 ```bash
+heroku create weatherpulse-backend
+```
+
+2. Set the OpenWeatherMap API key:
+```bash
+heroku config:set OPENWEATHERMAP_API_KEY="your_api_key_here"
+```
+
+3. Deploy the backend:
+```bash
+git subtree push --prefix project/server heroku main
+```
+
+The backend will be available at `https://weatherpulse-backend.herokuapp.com`
+
+### Frontend Deployment (GitHub Pages)
+
+1. Update the backend URL in `.env.production` to point to your deployed backend:
+```
+REACT_APP_API_URL=https://your-backend-url.herokuapp.com
+```
+
+2. Deploy to GitHub Pages:
+```bash
+cd project/react-app
 npm run deploy
 ```
 
-The changes will be live at https://kyrylo2.github.io/WeatherPulse
+The frontend will be deployed to https://kyrylo2.github.io/WeatherPulse
 
 ## 🔒 Security Note 🔒
 
-The `config.py` file containing your API key is excluded from version control for security 🔒. Never commit your API keys to the repository 🚫. Make sure to keep your API keys secure and private 🔑.
+Never commit your API keys to the repository 🚫. Always use environment variables for sensitive data 🔑.
 
 ## 📊 API Rate Limiting 📊
 
@@ -98,6 +121,7 @@ This application is designed to work within the OpenWeatherMap API free tier lim
 - Frontend: React with Material-UI 📈
 - API: OpenWeatherMap 🌡️
 - Real-time updates using threading and queue system 🕒
+- Environment-specific configuration using `.env` files
 
 ## 🤝 Contributing 🤝
 

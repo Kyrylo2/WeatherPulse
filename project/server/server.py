@@ -16,17 +16,11 @@ data_queue = queue.Queue()
 # List of Ukrainian cities
 cities = ["Kyiv", "Lviv", "Odesa", "Dnipro", "Kharkiv"]
 
-# Check for config file and API key
-try:
-    from config import API_KEY
-except ImportError:
-    print("Error: config.py not found!")
-    print("Please copy config.template.py to config.py and add your OpenWeatherMap API key")
-    sys.exit(1)
+# Get API key from environment variable
+API_KEY = os.environ.get('OPENWEATHERMAP_API_KEY')
 
-if not API_KEY or API_KEY == "your_api_key_here":
-    print("Error: Invalid API key!")
-    print("Please update config.py with your OpenWeatherMap API key")
+if not API_KEY:
+    print("Error: OPENWEATHERMAP_API_KEY environment variable not set!")
     sys.exit(1)
 
 def fetch_weather(city):
@@ -81,5 +75,6 @@ if __name__ == '__main__':
     weather_thread.start()
     print("Weather worker thread initialized")
     # Run the Flask server
-    print("Starting Flask server on port 8000...")
-    app.run(host='0.0.0.0', port=8000, debug=False)
+    port = int(os.environ.get('PORT', 8000))
+    print(f"Starting Flask server on port {port}...")
+    app.run(host='0.0.0.0', port=port, debug=False)
