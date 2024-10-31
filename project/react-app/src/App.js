@@ -1,35 +1,43 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useCallback } from 'react';
 import axios from 'axios';
 import { ThemeProvider } from '@mui/material/styles';
 import WeatherCard from './WeatherCard';
 import { AppBar, Toolbar, Typography, Container, Grid, Box } from '@mui/material';
 import theme from './theme';
 
+const CITIES = ["Kyiv", "Lviv", "Odesa", "Dnipro", "Kharkiv"];
+
 function App() {
   const [weatherData, setWeatherData] = useState([]);
   const [error, setError] = useState(null);
 
-  const API_URL = process.env.REACT_APP_API_URL || 'http://localhost:8000';
+  const API_KEY = process.env.REACT_APP_OPENWEATHER_API_KEY;
+
+  const fetchWeatherData = useCallback(async () => {
+    if (!API_KEY) {
+      setError("API key is not configured");
+      return;
+    }
+
+    try {
+      const promises = CITIES.map(city =>
+        axios.get(`https://api.openweathermap.org/data/2.5/weather?q=${city}&appid=${API_KEY}&units=metric&lang=en`)
+      );
+      
+      const responses = await Promise.all(promises);
+      setWeatherData(responses.map(response => response.data));
+      setError(null);
+    } catch (error) {
+      console.error("Error fetching data:", error);
+      setError("Unable to fetch weather data. Please try again later.");
+    }
+  }, [API_KEY]);
 
   useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const response = await axios.get(`${API_URL}/data`);
-        setWeatherData(response.data);
-        setError(null);
-      } catch (error) {
-        console.error("Error fetching data:", error);
-        setError("Unable to fetch weather data. Please try again later.");
-        // Don't update weatherData on error to keep showing last valid data
-      }
-    };
-
-    fetchData();
-    // Update every 10 seconds to match backend's update cycle
-    const interval = setInterval(fetchData, 10000);
-
+    fetchWeatherData();
+    const interval = setInterval(fetchWeatherData, 10000);
     return () => clearInterval(interval);
-  }, [API_URL]);
+  }, [fetchWeatherData]);
 
   return (
     <ThemeProvider theme={theme}>
