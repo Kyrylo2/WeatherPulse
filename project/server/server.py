@@ -37,7 +37,8 @@ if not API_KEY:
 # Configure CORS with specific origins
 ALLOWED_ORIGINS = [
     "https://kyrylo2.github.io",
-    "http://localhost:3000"  # for development
+    "http://localhost:3000",  # for development
+    "https://weather-pulse-2e0e4acabd94.herokuapp.com"  # for production
 ]
 
 CORS(app, resources={
@@ -45,7 +46,8 @@ CORS(app, resources={
         "origins": ALLOWED_ORIGINS,
         "methods": ["GET", "OPTIONS"],
         "allow_headers": ["Content-Type"],
-        "max_age": 3600
+        "max_age": 3600,
+        "supports_credentials": True
     }
 })
 
@@ -106,7 +108,11 @@ def get_data():
         if not data_list:
             return jsonify({"error": "No weather data available"}), 503
             
-        return jsonify(data_list)
+        response = jsonify(data_list)
+        # Ensure CORS headers are set
+        response.headers.add('Access-Control-Allow-Origin', origin if origin else '*')
+        response.headers.add('Access-Control-Allow-Credentials', 'true')
+        return response
     except Exception as e:
         print(f"Error processing request: {str(e)}", file=sys.stderr)
         return jsonify({"error": "Internal server error"}), 500
