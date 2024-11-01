@@ -1,17 +1,10 @@
 {
   "files": {
-    "main.js": "/WeatherPulse/static/js/main.e548a2ad.chunk.js",
-    "main.js.map": "/WeatherPulse/static/js/main.e548a2ad.chunk.js.map",
-    "runtime-main.js": "/WeatherPulse/static/js/runtime-main.4dfa759b.js",
-    "runtime-main.js.map": "/WeatherPulse/static/js/runtime-main.4dfa759b.js.map",
-    "static/js/2.629a1b82.chunk.js": "/WeatherPulse/static/js/2.629a1b82.chunk.js",
-    "static/js/2.629a1b82.chunk.js.map": "/WeatherPulse/static/js/2.629a1b82.chunk.js.map",
+    "main.js": "/WeatherPulse/static/js/main.52ffd2ef.js",
     "index.html": "/WeatherPulse/index.html",
-    "static/js/2.629a1b82.chunk.js.LICENSE.txt": "/WeatherPulse/static/js/2.629a1b82.chunk.js.LICENSE.txt"
+    "main.52ffd2ef.js.map": "/WeatherPulse/static/js/main.52ffd2ef.js.map"
   },
   "entrypoints": [
-    "static/js/runtime-main.4dfa759b.js",
-    "static/js/2.629a1b82.chunk.js",
-    "static/js/main.e548a2ad.chunk.js"
+    "static/js/main.52ffd2ef.js"
   ]
 }
