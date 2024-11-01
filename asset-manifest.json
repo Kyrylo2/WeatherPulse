@@ -1,17 +1,17 @@
 {
   "files": {
-    "main.js": "/WeatherPulse/static/js/main.cb442a6f.chunk.js",
-    "main.js.map": "/WeatherPulse/static/js/main.cb442a6f.chunk.js.map",
+    "main.js": "/WeatherPulse/static/js/main.591cab45.chunk.js",
+    "main.js.map": "/WeatherPulse/static/js/main.591cab45.chunk.js.map",
     "runtime-main.js": "/WeatherPulse/static/js/runtime-main.4dfa759b.js",
     "runtime-main.js.map": "/WeatherPulse/static/js/runtime-main.4dfa759b.js.map",
-    "static/js/2.ac8bb5d5.chunk.js": "/WeatherPulse/static/js/2.ac8bb5d5.chunk.js",
-    "static/js/2.ac8bb5d5.chunk.js.map": "/WeatherPulse/static/js/2.ac8bb5d5.chunk.js.map",
+    "static/js/2.629a1b82.chunk.js": "/WeatherPulse/static/js/2.629a1b82.chunk.js",
+    "static/js/2.629a1b82.chunk.js.map": "/WeatherPulse/static/js/2.629a1b82.chunk.js.map",
     "index.html": "/WeatherPulse/index.html",
-    "static/js/2.ac8bb5d5.chunk.js.LICENSE.txt": "/WeatherPulse/static/js/2.ac8bb5d5.chunk.js.LICENSE.txt"
+    "static/js/2.629a1b82.chunk.js.LICENSE.txt": "/WeatherPulse/static/js/2.629a1b82.chunk.js.LICENSE.txt"
   },
   "entrypoints": [
     "static/js/runtime-main.4dfa759b.js",
-    "static/js/2.ac8bb5d5.chunk.js",
-    "static/js/main.cb442a6f.chunk.js"
+    "static/js/2.629a1b82.chunk.js",
+    "static/js/main.591cab45.chunk.js"
   ]
 }
