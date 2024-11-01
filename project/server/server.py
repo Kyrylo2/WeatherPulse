@@ -6,6 +6,7 @@ import requests
 import time
 import sys
 import os
+from config import API_KEY
 
 app = Flask(__name__)
 # Configure CORS to allow requests from GitHub Pages
@@ -20,27 +21,26 @@ CORS(app, resources={
     }
 })
 
-# Queue to store weather data
-data_queue = queue.Queue()
+# Dictionary to store the latest weather data for each city
+weather_data = {}
+data_lock = threading.Lock()
 
 # List of Ukrainian cities
 cities = ["Kyiv", "Lviv", "Odesa", "Dnipro", "Kharkiv"]
 
-# Get API key from environment variable
-API_KEY = os.environ.get('OPENWEATHERMAP_API_KEY')
-
 if not API_KEY:
-    print("Error: OPENWEATHERMAP_API_KEY environment variable not set!")
+    print("Error: API_KEY not set in config.py!")
     sys.exit(1)
 
 def fetch_weather(city):
-    """Fetch weather data for a given city and put it into the queue."""
+    """Fetch weather data for a given city and store it in the weather_data dict."""
     url = f"http://api.openweathermap.org/data/2.5/weather?q={city}&appid={API_KEY}&units=metric&lang=en"
     try:
         print(f"Fetching weather data for {city}...")
         response = requests.get(url)
         if response.status_code == 200:
-            data_queue.put(response.json())
+            with data_lock:
+                weather_data[city] = response.json()
             print(f"Successfully fetched data for {city}")
         else:
             print(f"Error fetching data for {city}: Status code {response.status_code}")
@@ -64,19 +64,21 @@ def weather_worker():
             thread.join()
             
         # Wait 10 seconds before next update
-        # This makes 30 requests per minute (5 cities × 6 cycles)
-        # Still well within the 60 calls/minute limit
         time.sleep(10)
 
 @app.route('/data', methods=['GET'])
 def get_data():
-    """API endpoint to retrieve weather data from the queue."""
+    """API endpoint to retrieve weather data."""
     print("Received request for weather data")
-    data_list = []
-    while not data_queue.empty():
-        data_list.append(data_queue.get())
-    print(f"Returning {len(data_list)} weather records")
-    return jsonify(data_list)
+    try:
+        with data_lock:
+            # Return all available weather data
+            data_list = list(weather_data.values())
+        print(f"Returning {len(data_list)} weather records")
+        return jsonify(data_list)
+    except Exception as e:
+        print(f"Error processing request: {str(e)}", file=sys.stderr)
+        return jsonify({"error": "Internal server error"}), 500
 
 if __name__ == '__main__':
     print("Starting WeatherPulse server...")
