@@ -1,23 +1,51 @@
-from flask import Flask, jsonify
+from flask import Flask, jsonify, request
 from flask_cors import CORS
+from flask_limiter import Limiter
+from flask_limiter.util import get_remote_address
+from flask_talisman import Talisman
 import threading
-import queue
 import requests
 import time
 import sys
 import os
-from config import API_KEY
 
 app = Flask(__name__)
-# Configure CORS to allow requests from GitHub Pages
+
+# Security headers with Talisman
+Talisman(app, 
+    content_security_policy={
+        'default-src': "'self'",
+        'img-src': '*',
+        'connect-src': ["'self'", "https://api.openweathermap.org"]
+    },
+    force_https=True
+)
+
+# Rate limiting
+limiter = Limiter(
+    app=app,
+    key_func=get_remote_address,
+    default_limits=["100 per day", "10 per minute"]
+)
+
+# Get API key from environment variable
+API_KEY = os.environ.get('OPENWEATHER_API_KEY')
+if not API_KEY:
+    print("Error: OPENWEATHER_API_KEY environment variable not set!")
+    sys.exit(1)
+
+# Configure CORS with specific origins
+ALLOWED_ORIGINS = [
+    "https://kyrylo2.github.io",
+    "http://localhost:3000"  # for development
+]
+
 CORS(app, resources={
     r"/data": {
-        "origins": [
-            "http://localhost:3000",
-            "https://kyrylo2.github.io"
-        ],
+        "origins": ALLOWED_ORIGINS,
         "methods": ["GET", "OPTIONS"],
-        "allow_headers": ["Content-Type"]
+        "allow_headers": ["Content-Type"],
+        "max_age": 3600
     }
 })
 
@@ -28,16 +56,12 @@ data_lock = threading.Lock()
 # List of Ukrainian cities
 cities = ["Kyiv", "Lviv", "Odesa", "Dnipro", "Kharkiv"]
 
-if not API_KEY:
-    print("Error: API_KEY not set in config.py!")
-    sys.exit(1)
-
 def fetch_weather(city):
     """Fetch weather data for a given city and store it in the weather_data dict."""
     url = f"http://api.openweathermap.org/data/2.5/weather?q={city}&appid={API_KEY}&units=metric&lang=en"
     try:
         print(f"Fetching weather data for {city}...")
-        response = requests.get(url)
+        response = requests.get(url, timeout=10)  # Added timeout
         if response.status_code == 200:
             with data_lock:
                 weather_data[city] = response.json()
@@ -63,22 +87,34 @@ def weather_worker():
         for thread in threads:
             thread.join()
             
-        # Wait 10 seconds before next update
-        time.sleep(10)
+        # Wait before next update (increased to reduce API calls)
+        time.sleep(300)  # 5 minutes
 
 @app.route('/data', methods=['GET'])
+@limiter.limit("10 per minute")  # Rate limiting per endpoint
 def get_data():
     """API endpoint to retrieve weather data."""
-    print("Received request for weather data")
     try:
+        # Validate request origin
+        origin = request.headers.get('Origin', '')
+        if origin and origin not in ALLOWED_ORIGINS:
+            return jsonify({"error": "Unauthorized"}), 403
+
         with data_lock:
-            # Return all available weather data
             data_list = list(weather_data.values())
-        print(f"Returning {len(data_list)} weather records")
+        
+        if not data_list:
+            return jsonify({"error": "No weather data available"}), 503
+            
         return jsonify(data_list)
     except Exception as e:
         print(f"Error processing request: {str(e)}", file=sys.stderr)
         return jsonify({"error": "Internal server error"}), 500
+
+@app.errorhandler(429)
+def ratelimit_handler(e):
+    """Handle rate limit exceeded errors."""
+    return jsonify({"error": "Rate limit exceeded"}), 429
 
 if __name__ == '__main__':
     print("Starting WeatherPulse server...")
@@ -86,6 +122,7 @@ if __name__ == '__main__':
     weather_thread = threading.Thread(target=weather_worker, daemon=True)
     weather_thread.start()
     print("Weather worker thread initialized")
+    
     # Run the Flask server
     port = int(os.environ.get('PORT', 8000))
     print(f"Starting Flask server on port {port}...")

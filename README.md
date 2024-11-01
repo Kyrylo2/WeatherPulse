@@ -1,132 +1,145 @@
-# 🌞 WeatherPulse 🌞
+# WeatherPulse
 
-A real-time weather dashboard for Ukrainian cities built with React and Flask 🚀
+A weather application that displays real-time weather information for Ukrainian cities. The application consists of a Python Flask backend deployed on Heroku and a React frontend deployed on GitHub Pages.
 
-## 🌍 Live Demo
+## Security Features
 
-Visit the live application at: https://kyrylo2.github.io/WeatherPulse
+- Rate limiting to prevent abuse
+- Secure CORS configuration
+- Security headers with Flask-Talisman
+- Environment-based configuration
+- API key protection
 
-## 🌈 Features 🌈
+## Prerequisites
 
-- Real-time weather updates for major Ukrainian cities:
-  - Kyiv 🏛️
-  - Lviv 🎭
-  - Odesa 🌊
-  - Dnipro 🌉
-  - Kharkiv 🏰
-- Automatic updates every 10 seconds ⏰
-- Display of temperature, humidity, wind speed, and weather conditions 🌡️
-- Clean, modern UI using Material-UI components 💻
+- Node.js (version specified in .nvmrc)
+- Python 3.8+
+- Heroku CLI
+- Git
 
-## 📚 Setup 📚
+## Backend Deployment (Heroku)
 
-### 📁 Backend Setup 📁
-
-1. Navigate to the server directory:
+1. Login to Heroku:
 ```bash
-cd project/server
+heroku login
 ```
 
-2. Install Python dependencies:
+2. Set environment variables on Heroku:
 ```bash
-pip3 install -r requirements.txt
+heroku config:set OPENWEATHER_API_KEY=your_api_key
 ```
 
-3. Set environment variable:
+3. Deploy to Heroku:
 ```bash
-export OPENWEATHERMAP_API_KEY="your_api_key_here"
+git push heroku main
 ```
 
-4. Start the Flask server:
+4. Verify the deployment:
 ```bash
-python3 server.py
+heroku logs --tail
 ```
 
-The server will run on port 8000 📈
+## Frontend Deployment (GitHub Pages)
 
-### 📁 Frontend Setup 📁
+1. Create `.env.production` file in `project/react-app/` (do not commit this file):
+```
+REACT_APP_API_BASE_URL=https://your-heroku-app.herokuapp.com
+REACT_APP_BACKEND_URL=/data
+REACT_APP_ENABLE_LOGGING=false
+REACT_APP_UPDATE_INTERVAL=300000
+```
 
-1. Navigate to the React app directory:
+2. Install dependencies:
 ```bash
 cd project/react-app
-```
-
-2. Install Node.js dependencies:
-```bash
 npm install
 ```
 
-3. Environment Configuration:
-   - For development: `.env.development` configures the API URL to `http://localhost:8000`
-   - For production: `.env.production` configures the API URL to your deployed backend URL
-
-4. Start the development server:
+3. Deploy to GitHub Pages:
 ```bash
-npm start
-```
-
-The app will be available at http://localhost:3000 📊
-
-## 🚀 Deployment 🚀
-
-### Backend Deployment (Heroku)
-
-1. Create a new Heroku app:
-```bash
-heroku create weatherpulse-backend
-```
-
-2. Set the OpenWeatherMap API key:
-```bash
-heroku config:set OPENWEATHERMAP_API_KEY="your_api_key_here"
-```
-
-3. Deploy the backend:
-```bash
-git subtree push --prefix project/server heroku main
-```
-
-The backend will be available at `https://weatherpulse-backend.herokuapp.com`
-
-### Frontend Deployment (GitHub Pages)
-
-1. Update the backend URL in `.env.production` to point to your deployed backend:
-```
-REACT_APP_API_URL=https://your-backend-url.herokuapp.com
-```
-
-2. Deploy to GitHub Pages:
-```bash
-cd project/react-app
 npm run deploy
 ```
 
-The frontend will be deployed to https://kyrylo2.github.io/WeatherPulse
+## Local Development
 
-## 🔒 Security Note 🔒
+1. Backend Setup:
+```bash
+# Create virtual environment
+python -m venv env
+source env/bin/activate  # On Windows: env\Scripts\activate
 
-Never commit your API keys to the repository 🚫. Always use environment variables for sensitive data 🔑.
+# Install dependencies
+pip install -r requirements.txt
 
-## 📊 API Rate Limiting 📊
+# Set environment variables
+export OPENWEATHER_API_KEY=your_api_key  # On Windows: set OPENWEATHER_API_KEY=your_api_key
 
-This application is designed to work within the OpenWeatherMap API free tier limits:
-- Maximum 60 calls per minute ⏰
-- Current implementation:
-  - 5 cities updated every 10 seconds ⏰
-  - Total: ~30 API calls per minute 📊
+# Run server
+python project/server/server.py
+```
 
-## 💻 Development 💻
+2. Frontend Setup:
+```bash
+cd project/react-app
 
-- Backend: Flask with Python 3 🐍
-- Frontend: React with Material-UI 📈
-- API: OpenWeatherMap 🌡️
-- Real-time updates using threading and queue system 🕒
-- Environment-specific configuration using `.env` files
+# Install dependencies
+npm install
 
-## 🤝 Contributing 🤝
+# Create .env.development
+echo "REACT_APP_API_BASE_URL=http://localhost:8000" > .env.development
+echo "REACT_APP_BACKEND_URL=/data" >> .env.development
 
-If you would like to contribute to this project, please fork the repository and submit a pull request.
+# Start development server
+npm start
+```
 
-## 📜 License 📜
+## Security Best Practices
 
-This project is licensed under the MIT License.
+1. Never commit sensitive information (API keys, credentials) to the repository
+2. Use environment variables for configuration
+3. Keep dependencies updated
+4. Use HTTPS for all API communications
+5. Implement rate limiting to prevent abuse
+6. Configure CORS properly
+7. Use security headers
+
+## Maintenance
+
+1. Regularly update dependencies:
+```bash
+# Frontend
+npm audit
+npm update
+
+# Backend
+pip list --outdated
+pip install -U -r requirements.txt
+```
+
+2. Monitor Heroku logs:
+```bash
+heroku logs --tail
+```
+
+3. Check GitHub Pages deployment status in repository settings
+
+## Troubleshooting
+
+1. If the backend fails to start:
+- Check if environment variables are set correctly
+- Verify Heroku logs for errors
+- Ensure all dependencies are installed
+
+2. If frontend deployment fails:
+- Check if gh-pages branch exists
+- Verify GitHub Pages settings in repository
+- Ensure homepage in package.json is correct
+
+3. If API calls fail:
+- Verify CORS settings
+- Check rate limits
+- Ensure API key is valid
+
+## License
+
+MIT

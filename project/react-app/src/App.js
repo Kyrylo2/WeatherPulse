@@ -3,6 +3,8 @@ import { ThemeProvider, createTheme, CssBaseline, IconButton, Box, Container, Ap
 import { Brightness4, Brightness7 } from '@mui/icons-material';
 import WeatherCard from './WeatherCard';
 
+const apiUrl = `${process.env.REACT_APP_API_BASE_URL}${process.env.REACT_APP_BACKEND_URL}`;
+
 function App() {
   const [mode, setMode] = useState('light');
   const [weatherData, setWeatherData] = useState([]);
@@ -59,7 +61,7 @@ function App() {
   useEffect(() => {
     const fetchWeatherData = async () => {
       try {
-        const response = await fetch('http://localhost:8000/data');
+        const response = await fetch(apiUrl);
         if (!response.ok) {
           throw new Error('Failed to fetch weather data');
         }
